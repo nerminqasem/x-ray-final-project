@@ -74,7 +74,3 @@ The separate Faster R-CNN code is a prototype and should not be considered a val
 ## Data, Privacy, and Medical Use
 
 Do not upload identifiable or sensitive patient information to this prototype. The current application does not implement administrator authentication or a complete clinical data-protection workflow. Any real-world use would require secure access controls, retention and deletion policies, privacy review, reproducible training, independent clinical validation, and qualified medical oversight.
-
-## Further Reading
-
-See [`PROJECT_REPORT.md`](PROJECT_REPORT.md) for the project description, methodology, reported results, limitations, and references.
