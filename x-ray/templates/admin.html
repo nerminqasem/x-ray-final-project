@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Admin – PneumoVision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; }
+        .header { background:#333; color:white; padding:15px; text-align:center; }
+        .nav a { color:white; margin:0 12px; text-decoration:none; font-size:14px; }
+        .container { max-width:1200px; margin:30px auto; background:white; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        h2 { color:#6a1b9a; }
+        table { width:100%; border-collapse:collapse; margin-top:15px; }
+        th, td { padding:8px; border:1px solid #ddd; text-align:center; font-size:13px; }
+        th { background:#6a1b9a; color:white; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Panel</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/preprocessing">Preprocessing</a>
+            <a href="/model-selection">Models</a>
+            <a href="/prediction">Prediction</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/history">History</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Recent Predictions</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Model</th><th>Prediction</th><th>Confidence</th><th>Date</th></tr></thead>
+            <tbody>
+                {% for r in history %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.model }}</td>
+                    <td>{{ r.prediction }}</td>
+                    <td>{{ "%.2f"|format(r.confidence * 100) }}%</td>
+                    <td>{{ r.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 style="margin-top:30px;">System Logs</h2>
+        <table>
+            <thead><tr><th>ID</th><th>Action</th><th>Details</th><th>Date</th></tr></thead>
+            <tbody>
+                {% for l in logs %}
+                <tr>
+                    <td>{{ l.id }}</td>
+                    <td>{{ l.action }}</td>
+                    <td>{{ l.details }}</td>
+                    <td>{{ l.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

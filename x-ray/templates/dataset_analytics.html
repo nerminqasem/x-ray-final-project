@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Dataset Analytics – PneumoVision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; }
+        .header { background:#333; color:white; padding:15px; text-align:center; }
+        .nav a { color:white; margin:0 12px; text-decoration:none; font-size:14px; }
+        .container { max-width:1100px; margin:30px auto; background:white; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        table { width:100%; border-collapse:collapse; margin-top:20px; }
+        th, td { padding:10px; border:1px solid #ddd; text-align:center; }
+        th { background:#6a1b9a; color:white; }
+        .grid { display:grid; grid-template-columns:1fr 1fr; gap:25px; margin-top:25px; }
+        @media(max-width:768px) { .grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dataset Analytics</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/preprocessing">Preprocessing</a>
+            <a href="/model-selection">Models</a>
+            <a href="/prediction">Prediction</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/history">History</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Dataset Statistics</h2>
+        <p><strong>Total Images:</strong> {{ stats.total_images }}</p>
+
+        <table>
+            <thead>
+                <tr><th>Split</th><th>Total</th><th>Normal</th><th>Pneumonia</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Train</td><td>{{ stats.train.total }}</td><td>{{ stats.train.normal }}</td><td>{{ stats.train.pneumonia }}</td></tr>
+                <tr><td>Validation</td><td>{{ stats.val.total }}</td><td>{{ stats.val.normal }}</td><td>{{ stats.val.pneumonia }}</td></tr>
+                <tr><td>Test</td><td>{{ stats.test.total }}</td><td>{{ stats.test.normal }}</td><td>{{ stats.test.pneumonia }}</td></tr>
+            </tbody>
+        </table>
+
+        <div class="grid">
+            <canvas id="splitChart"></canvas>
+            <canvas id="classChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const stats = {{ stats | tojson }};
+
+        new Chart(document.getElementById('splitChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Train', 'Validation', 'Test'],
+                datasets: [{
+                    label: 'Total Images',
+                    data: [stats.train.total, stats.val.total, stats.test.total],
+                    backgroundColor: ['#6a1b9a', '#2196F3', '#4CAF50']
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        new Chart(document.getElementById('classChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Normal', 'Pneumonia'],
+                datasets: [{
+                    data: [
+                        stats.train.normal + stats.val.normal + stats.test.normal,
+                        stats.train.pneumonia + stats.val.pneumonia + stats.test.pneumonia
+                    ],
+                    backgroundColor: ['#4CAF50', '#f44336']
+                }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+</body>
+</html>

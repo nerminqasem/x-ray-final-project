@@ -1,0 +1,18 @@
+{
+  "total_images": 5863,
+  "train": {
+    "total": 5216,
+    "normal": 1341,
+    "pneumonia": 3875
+  },
+  "val": {
+    "total": 16,
+    "normal": 8,
+    "pneumonia": 8
+  },
+  "test": {
+    "total": 624,
+    "normal": 234,
+    "pneumonia": 390
+  }
+}

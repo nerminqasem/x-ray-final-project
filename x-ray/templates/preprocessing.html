@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Preprocessing – PneumoVision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; }
+        .header { background:#333; color:white; padding:15px; text-align:center; }
+        .nav a { color:white; margin:0 12px; text-decoration:none; font-size:14px; }
+        .container { max-width:1100px; margin:30px auto; background:white; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        table { width:100%; border-collapse:collapse; margin-top:20px; }
+        th, td { padding:10px; border:1px solid #ddd; text-align:center; font-size:14px; }
+        th { background:#6a1b9a; color:white; }
+        .img-row { display:flex; gap:20px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+        .img-card { text-align:center; }
+        .img-card img { height:250px; border-radius:8px; border:1px solid #ccc; }
+        .img-card p { font-size:13px; color:#555; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Preprocessing Comparison</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/preprocessing">Preprocessing</a>
+            <a href="/model-selection">Models</a>
+            <a href="/prediction">Prediction</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/dataset">Dataset</a>
+            <a href="/history">History</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Original vs Processed</h2>
+        <div class="img-row">
+            <div class="img-card"><img src="/static/sample_images/Original.png" alt="Original"><p>Original</p></div>
+            <div class="img-card"><img src="/static/sample_images/h0105.png" alt="CLAHE"><p>CLAHE</p></div>
+            <div class="img-card"><img src="/static/sample_images/114.png" alt="Hist Eq"><p>Histogram Equalization</p></div>
+            <div class="img-card"><img src="/static/sample_images/tb0688.png" alt="Gamma"><p>Gamma Correction</p></div>
+        </div>
+
+        <h2>Performance Comparison</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Preprocessing</th>
+                    <th>Accuracy</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1-Score</th>
+                    <th>ROC-AUC</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row.preprocessing }}</td>
+                    <td>{{ "%.4f"|format(row.accuracy) }}</td>
+                    <td>{{ "%.4f"|format(row.precision) }}</td>
+                    <td>{{ "%.4f"|format(row.recall) }}</td>
+                    <td>{{ "%.4f"|format(row.f1_score) }}</td>
+                    <td>{{ "%.4f"|format(row.roc_auc) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <canvas id="prepChart" style="margin-top:30px;"></canvas>
+    </div>
+
+    <script>
+        const labels = {{ data | map(attribute='preprocessing') | list | tojson }};
+        const acc    = {{ data | map(attribute='accuracy') | list | tojson }};
+        const f1     = {{ data | map(attribute='f1_score') | list | tojson }};
+        const auc    = {{ data | map(attribute='roc_auc') | list | tojson }};
+
+        new Chart(document.getElementById('prepChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Accuracy', data: acc, backgroundColor: 'rgba(106,27,154,0.7)' },
+                    { label: 'F1-Score', data: f1,  backgroundColor: 'rgba(33,150,243,0.7)' },
+                    { label: 'ROC-AUC',  data: auc, backgroundColor: 'rgba(76,175,80,0.7)' }
+                ]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+        });
+    </script>
+</body>
+</html>

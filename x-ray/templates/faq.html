@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<title>Frequently Asked Questions</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS Styles -->
+<link rel="stylesheet" href="/static/css/w3.css">
+<link rel="stylesheet" href="/static/css/woza.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+<link rel="shortcut icon" type="image/png" href="https://media.gettyimages.com/id/2159301017/vector/artificial-intelligence-ai-with-female-face-icon-on-white-background.jpg?s=612x612&w=gi&k=20&c=ByAmCCjdqWz8odC6RIgXy8PUvI1REitZm_9o_fxe1w8=">
+
+<style>
+    p {
+        font-size: 18px;
+        line-height: 1.8;
+    }
+</style>
+
+</head>
+
+<body class="w3-pale-blue">
+
+<div style="max-width:1500px">
+
+<!-- 1. HOME PAGE TAB -->
+
+<div class="w3-animate-opacity w3-padding w3-margin-bottom">
+
+<!-- 960px wide area -->
+
+<div class='w3-content w3-padding w3-white' style="max-width:960px">
+
+<!-- Top Bar -->
+
+<div class='normal-bar w3-padding w3-round w3-text-black w3-opacity w3-small'>
+
+    <p class="w3-padding-left no-margin space-letters w3-left-align unblock">
+        <a class="change-size" href="{{ url_for('home_func') }}">
+            <b>*<*-- Go Back</b>
+        </a>
+    </p>
+
+</div>
+
+<div class="w3-text-purple w3-center w3-margin space-letters">
+
+    <h2>Frequently Asked Questions</h2>
+
+</div>
+
+<div class='bottom-margin'>
+
+    <!-- Block Start -->
+
+    <div class='side-margin1 w3-round text-color space-letters 
+    w3-margin-bottom'>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>1- What does this application do?</b>
+        </p>
+
+        <p>
+            This application automatically analyzes chest X-rays and draws bounding boxes around suspicious opacities. Radiologists can then review the highlighted areas and use their clinical judgment to make the final diagnosis. This is a free diagnostic support tool.
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>2- How is it used?</b>
+        </p>
+
+        <p>
+            - Upload one or more chest X-rays (in dicom, png, or jpg format).<br>
+            - Once your images are submitted, they are automatically analyzed.<br>
+            - A list of image names is displayed.<br>
+            - The number of suspicious opacities is also displayed.<br>
+            - Click on an image name to view the image with the drawn bounding boxes.<br>
+            - Click anywhere on the image to hide or show the bounding boxes.
+        </p>
+
+        <p>
+            A few example chest X-rays are available in the folder named "example_Lujain_images" for testing. You can use these images.
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>3- How can I zoom in on the image?</b>
+        </p>
+
+        <p>
+            To enlarge the image, use the built-in desktop zoom feature available on Mac and Windows 10.<br>
+
+            Place the mouse cursor over the part of the image you want to enlarge, then:<br>
+
+            - On Mac, spread two fingers apart on the trackpad,<br>
+            - On Windows, hold down the Windows key and press the + key.
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>4- How does this application work?</b>
+        </p>
+
+        <p>
+            A fine-tuned Faster R-CNN computer vision model analyzes each image. When opacities are detected, the model outputs their bounding box coordinates. These boxes are then drawn on the X-ray.<br>
+
+            For more information, see the 
+           
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>5- Which image formats are supported?</b>
+        </p>
+
+        <p>
+            The application accepts images in dicom, png, or jpg format. Tiff images are not supported.
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>6- Can this application analyze pediatric images?</b>
+        </p>
+
+        <p>
+            Yes, it can. However, since there were not many pediatric images in the training data, performance on pediatric images may be lower compared to adult images. Pediatric validation results are shown in the 
+            
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>7- Do I need an internet connection for this application to work?</b>
+        </p>
+
+        <p>
+            No, an internet connection is not required. However, an internet connection is required for the initial download and installation.
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>8- Will I need a computer with a GPU and a lot of RAM?</b>
+        </p>
+
+        <p>
+            A GPU may make the application run faster, but it is not required. This application also runs properly on a CPU. You do not need a large amount of RAM either. A standard Mac or PC can run this application without any problems.
+        </p>
+
+        <p class='w3-text-purple topp-margin'>
+            <b>9- Will the application always be free?</b>
+        </p>
+
+        <p>
+            Yes, it will always be free. This is an open-source project.
+        </p>
+
+    </div>
+
+    <!-- Block End -->
+
+</div>
+
+</div><!-- End of 960px wide area -->
+
+</div><!-- HOME PAGE TAB END -->
+
+</div><!-- w3-content -->
+
+</body>
+
+</html>

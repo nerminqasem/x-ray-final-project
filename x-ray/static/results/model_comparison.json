@@ -1,0 +1,24 @@
+{
+  "model_comparison": [
+    {
+      "model": "DenseNet121",
+      "accuracy": 0.9342,
+      "precision": 0.9418,
+      "recall": 0.9487,
+      "f1_score": 0.9452,
+      "roc_auc": 0.9764,
+      "training_time_sec": 3120,
+      "inference_time_ms": 47.3
+    },
+    {
+      "model": "MobileNetV3",
+      "accuracy": 0.9183,
+      "precision": 0.9264,
+      "recall": 0.9333,
+      "f1_score": 0.9298,
+      "roc_auc": 0.9612,
+      "training_time_sec": 1980,
+      "inference_time_ms": 21.7
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard – PneumoVision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; }
+        .header { background:#333; color:white; padding:15px; text-align:center; }
+        .nav a { color:white; margin:0 12px; text-decoration:none; font-size:14px; }
+        .container { max-width:1200px; margin:30px auto; background:white; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        .grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:25px; margin-top:25px; }
+        .card { border:1px solid #ddd; border-radius:8px; padding:15px; }
+        .card h3 { color:#6a1b9a; margin-top:0; font-size:16px; }
+        .card img { width:100%; border-radius:6px; }
+        .metrics-row { display:flex; gap:15px; flex-wrap:wrap; margin-top:20px; }
+        .metric-box { background:#f3e5f5; padding:15px; border-radius:8px; flex:1; min-width:150px; text-align:center; }
+        .metric-box h4 { margin:0; color:#6a1b9a; font-size:13px; }
+        .metric-box p { margin:5px 0 0; font-size:22px; font-weight:bold; }
+        @media(max-width:768px) { .grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Performance Dashboard</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/preprocessing">Preprocessing</a>
+            <a href="/model-selection">Models</a>
+            <a href="/prediction">Prediction</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/history">History</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Model Performance</h2>
+        <div class="metrics-row">
+            {% for name, m in models.items() %}
+            <div class="metric-box">
+                <h4>{{ name }}</h4>
+                <p>{{ "%.2f"|format(m.accuracy * 100) }}%</p>
+                <small>Accuracy</small>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Model Comparison</h3>
+                <canvas id="modelChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>Preprocessing Comparison</h3>
+                <canvas id="prepChart"></canvas>
+            </div>
+            <div class="card">
+                <h3>Confusion Matrix – DenseNet121</h3>
+                <img src="/static/results/confusion_matrix_densenet.png" alt="CM DenseNet">
+            </div>
+            <div class="card">
+                <h3>Confusion Matrix – MobileNetV3</h3>
+                <img src="/static/results/confusion_matrix_mobilenet.png" alt="CM MobileNet">
+            </div>
+            <div class="card">
+                <h3>ROC Curve – DenseNet121</h3>
+                <img src="/static/results/roc_curve_densenet.png" alt="ROC DenseNet">
+            </div>
+            <div class="card">
+                <h3>ROC Curve – MobileNetV3</h3>
+                <img src="/static/results/roc_curve_mobilenet.png" alt="ROC MobileNet">
+            </div>
+            <div class="card">
+                <h3>Training / Validation Loss</h3>
+                <img src="/static/results/training_loss_densenet.png" alt="Loss">
+            </div>
+            <div class="card">
+                <h3>Training / Validation Accuracy</h3>
+                <img src="/static/results/training_acc_densenet.png" alt="Acc">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const models = {{ models | tojson }};
+        const prep = {{ preprocessing | tojson }};
+
+        const mLabels = Object.keys(models);
+        const mAcc = mLabels.map(k => models[k].accuracy);
+        const mF1  = mLabels.map(k => models[k].f1_score);
+        const mAuc = mLabels.map(k => models[k].roc_auc);
+
+        new Chart(document.getElementById('modelChart'), {
+            type: 'bar',
+            data: {
+                labels: mLabels,
+                datasets: [
+                    { label: 'Accuracy', data: mAcc, backgroundColor: 'rgba(106,27,154,0.7)' },
+                    { label: 'F1-Score', data: mF1,  backgroundColor: 'rgba(33,150,243,0.7)' },
+                    { label: 'ROC-AUC',  data: mAuc, backgroundColor: 'rgba(76,175,80,0.7)' }
+                ]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+        });
+
+        new Chart(document.getElementById('prepChart'), {
+            type: 'line',
+            data: {
+                labels: prep.map(p => p.preprocessing),
+                datasets: [
+                    { label: 'Accuracy', data: prep.map(p => p.accuracy), borderColor: '#6a1b9a', fill: false },
+                    { label: 'F1-Score', data: prep.map(p => p.f1_score), borderColor: '#2196F3', fill: false },
+                    { label: 'ROC-AUC',  data: prep.map(p => p.roc_auc),  borderColor: '#4CAF50', fill: false }
+                ]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+        });
+    </script>
+</body>
+</html>

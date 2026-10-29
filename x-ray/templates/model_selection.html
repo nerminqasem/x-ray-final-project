@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Model Selection – PneumoVision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; }
+        .header { background:#333; color:white; padding:15px; text-align:center; }
+        .nav a { color:white; margin:0 12px; text-decoration:none; font-size:14px; }
+        .container { max-width:1100px; margin:30px auto; background:white; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        .model-card { border:1px solid #ddd; padding:20px; border-radius:8px; margin-bottom:20px; }
+        .model-card h3 { color:#6a1b9a; margin-top:0; }
+        table { width:100%; border-collapse:collapse; margin-top:15px; }
+        th, td { padding:10px; border:1px solid #ddd; text-align:center; font-size:14px; }
+        th { background:#6a1b9a; color:white; }
+        .badge { background:#4CAF50; color:white; padding:3px 8px; border-radius:4px; font-size:12px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Model Selection</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/preprocessing">Preprocessing</a>
+            <a href="/model-selection">Models</a>
+            <a href="/prediction">Prediction</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/history">History</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Available Models</h2>
+
+        {% for name, m in models.items() %}
+        <div class="model-card">
+            <h3>{{ name }} {% if name == "DenseNet121" %}<span class="badge">BEST</span>{% endif %}</h3>
+            <p><strong>Accuracy:</strong> {{ "%.4f"|format(m.accuracy) }} |
+               <strong>F1-Score:</strong> {{ "%.4f"|format(m.f1_score) }} |
+               <strong>ROC-AUC:</strong> {{ "%.4f"|format(m.roc_auc) }} |
+               <strong>Train:</strong> {{ m.training_time_sec }}s |
+               <strong>Inference:</strong> {{ m.inference_time_ms }}ms</p>
+        </div>
+        {% endfor %}
+
+        <h2>Comparison</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th>
+                    <th>F1</th><th>ROC-AUC</th><th>Train (s)</th><th>Inference (ms)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in comparison %}
+                <tr>
+                    <td>{{ row.model }}</td>
+                    <td>{{ "%.4f"|format(row.accuracy) }}</td>
+                    <td>{{ "%.4f"|format(row.precision) }}</td>
+                    <td>{{ "%.4f"|format(row.recall) }}</td>
+                    <td>{{ "%.4f"|format(row.f1_score) }}</td>
+                    <td>{{ "%.4f"|format(row.roc_auc) }}</td>
+                    <td>{{ row.training_time_sec }}</td>
+                    <td>{{ row.inference_time_ms }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <canvas id="modelChart" style="margin-top:30px;"></canvas>
+    </div>
+
+    <script>
+        const labels = {{ comparison | map(attribute='model') | list | tojson }};
+        const acc = {{ comparison | map(attribute='accuracy') | list | tojson }};
+        const f1  = {{ comparison | map(attribute='f1_score') | list | tojson }};
+        const auc = {{ comparison | map(attribute='roc_auc') | list | tojson }};
+
+        new Chart(document.getElementById('modelChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Accuracy', data: acc, backgroundColor: 'rgba(106,27,154,0.7)' },
+                    { label: 'F1-Score', data: f1,  backgroundColor: 'rgba(33,150,243,0.7)' },
+                    { label: 'ROC-AUC',  data: auc, backgroundColor: 'rgba(76,175,80,0.7)' }
+                ]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+        });
+    </script>
+</body>
+</html>

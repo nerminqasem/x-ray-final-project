@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>History – PneumoVision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; }
+        .header { background:#333; color:white; padding:15px; text-align:center; }
+        .nav a { color:white; margin:0 12px; text-decoration:none; font-size:14px; }
+        .container { max-width:1200px; margin:30px auto; background:white; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+        table { width:100%; border-collapse:collapse; margin-top:20px; }
+        th, td { padding:8px; border:1px solid #ddd; text-align:center; font-size:13px; }
+        th { background:#6a1b9a; color:white; }
+        .btn { background:#f44336; color:white; padding:8px 16px; border:none; border-radius:4px; cursor:pointer; }
+        .pneumonia { color:#f44336; font-weight:bold; }
+        .normal { color:#4CAF50; font-weight:bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Prediction History</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/preprocessing">Preprocessing</a>
+            <a href="/model-selection">Models</a>
+            <a href="/prediction">Prediction</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/history">History</a>
+            <a href="/admin">Admin</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <button class="btn" onclick="clearHistory()">Clear History</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th><th>Image</th><th>Prediction</th><th>Confidence</th>
+                    <th>Preprocessing</th><th>Model</th><th>Inference (ms)</th><th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                {% for r in records %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td><a href="{{ r.image_path }}" target="_blank">View</a></td>
+                    <td class="{{ r.prediction|lower }}">{{ r.prediction }}</td>
+                    <td>{{ "%.2f"|format(r.confidence * 100) }}%</td>
+                    <td>{{ r.preprocessing }}</td>
+                    <td>{{ r.model }}</td>
+                    <td>{{ "%.2f"|format(r.inference_time) }}</td>
+                    <td>{{ r.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function clearHistory() {
+            if (!confirm('Clear all history?')) return;
+            await fetch('/api/history/clear', { method: 'POST' });
+            location.reload();
+        }
+    </script>
+</body>
+</html>

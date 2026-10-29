@@ -1,0 +1,36 @@
+{
+  "preprocessing_comparison": [
+    {
+      "preprocessing": "Original",
+      "accuracy": 0.891,
+      "precision": 0.9002,
+      "recall": 0.9077,
+      "f1_score": 0.9039,
+      "roc_auc": 0.9451
+    },
+    {
+      "preprocessing": "CLAHE",
+      "accuracy": 0.9342,
+      "precision": 0.9418,
+      "recall": 0.9487,
+      "f1_score": 0.9452,
+      "roc_auc": 0.9764
+    },
+    {
+      "preprocessing": "Histogram Equalization",
+      "accuracy": 0.9127,
+      "precision": 0.921,
+      "recall": 0.9282,
+      "f1_score": 0.9246,
+      "roc_auc": 0.9588
+    },
+    {
+      "preprocessing": "Gamma Correction",
+      "accuracy": 0.9048,
+      "precision": 0.9134,
+      "recall": 0.9205,
+      "f1_score": 0.9169,
+      "roc_auc": 0.9532
+    }
+  ]
+}
